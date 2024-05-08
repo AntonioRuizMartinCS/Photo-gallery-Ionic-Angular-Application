@@ -36,7 +36,17 @@ public async showActionSheet(photo: UserPhoto, position: number) {
       handler: () => {
         this.photoService.deletePicture(photo, position);
       }
-    }, {
+    }, 
+
+    {
+      text: 'Edit',
+      icon: 'create-outline',
+      handler: () => {
+        this.showInputAlert(photo, position);
+      }
+    },
+    
+    {
       text: 'Cancel',
       icon: 'close',
       role: 'cancel',
@@ -50,11 +60,6 @@ public async showActionSheet(photo: UserPhoto, position: number) {
   await actionSheet.present();
 }
 
-public async test(){
-
-  console.log('test')
-}
-
 
 public async showInputAlert(photo: UserPhoto, position: number){
 
@@ -65,6 +70,7 @@ public async showInputAlert(photo: UserPhoto, position: number){
     inputs: [
       {
         name: 'imageName',
+        value: photo.title,
         placeholder: 'Image tittle (max 20 characters)',
         attributes: {
         maxlength: 20,
@@ -72,6 +78,7 @@ public async showInputAlert(photo: UserPhoto, position: number){
       },
       {
         name: 'imageDescription',
+        value: photo.description,
         type: 'textarea',
         placeholder: 'image description',
       },
@@ -86,7 +93,7 @@ public async showInputAlert(photo: UserPhoto, position: number){
     },
     {
       text: 'Save',
-      role: 'destructive',
+      
       handler: data => {
        // console.log('save button pressed for ' + photo.filepath + ' ' + data.imageName);
         this.photoService.photos[position].title = data.imageName;
