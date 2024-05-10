@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component} from '@angular/core';
 import { PhotoService, UserPhoto } from '../services/photo.service';
 import { ActionSheetController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
@@ -22,13 +22,25 @@ export class Tab2Page {
 
 async ngOnInit() {
   await this.photoService.loadSaved();
-  
 
 }
+
+handleChange(e: { detail: { value: number } }) {
+  console.log('ionChange fired with value: ' + e.detail.value);
+  this.photoService.filterPhotos(e.detail.value)
+}
+
+public async displayFilteredPhotos(){
+
+
+
+}
+
 
 public async showActionSheet(photo: UserPhoto, position: number) {
   const actionSheet = await this.actionSheetController.create({
     header: 'Photos',
+
     buttons: [{
       text: 'Delete',
       role: 'destructive',
@@ -82,6 +94,15 @@ public async showInputAlert(photo: UserPhoto, position: number){
         type: 'textarea',
         placeholder: 'image description',
       },
+
+      {
+        name: 'imageRating',
+        type: 'number',
+        value: photo.rating,
+        placeholder: 'rating',
+        min: 0,
+        max: 5,
+      }
     ],
 
     buttons: [{
@@ -95,9 +116,9 @@ public async showInputAlert(photo: UserPhoto, position: number){
       text: 'Save',
       
       handler: data => {
-       // console.log('save button pressed for ' + photo.filepath + ' ' + data.imageName);
         this.photoService.photos[position].title = data.imageName;
         this.photoService.photos[position].description = data.imageDescription;
+        this.photoService.photos[position].rating = data.imageRating;
         this.photoService.setPreferences();
         console.log(this.photoService.photos[position].title);
         console.log(this.photoService.photos[position].description);
