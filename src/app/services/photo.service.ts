@@ -9,6 +9,7 @@ import { Preferences } from '@capacitor/preferences';
 })
 export class PhotoService {
   public photos: UserPhoto[] = [];
+  public filteredPhotos: UserPhoto[] = [];
   private PHOTO_STORAGE: string = 'photos';
 
   constructor() {}
@@ -20,15 +21,20 @@ export class PhotoService {
 
   }
 
-  /* Use the device camera to take a photo:
-  // https://capacitor.ionicframework.com/docs/apis/camera
+  public async filterPhotos(rating:number){
 
-  // Store the photo data into permanent file storage:
-  // https://capacitor.ionicframework.com/docs/apis/filesystem
+    for (let i = 0; i< this.photos.length; i++){
 
-  // Store a reference to all photo filepaths using Storage API:
-  // https://capacitor.ionicframework.com/docs/apis/storage
-  */
+      if (this.photos[i].rating >= rating){
+
+        this.filteredPhotos.push(this.photos[i])
+      }
+    }
+
+    return this.filteredPhotos
+
+  }
+
   public async addNewToGallery() {
 
 
@@ -42,7 +48,8 @@ export class PhotoService {
      const savedImageFile = {
       fileUri: capturedPhoto.dataUrl??'',
       title: '' ,
-      description: ''
+      description: '',
+      rating: 0
 
      }
     // Add new photo to Photos array
@@ -79,4 +86,5 @@ export interface UserPhoto {
   fileUri: string;
   title: string;
   description: string;
+  rating: number;
 }
